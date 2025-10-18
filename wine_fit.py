@@ -85,13 +85,16 @@ print(names[mask])
 # can load the exact preprocessing + model and know the expected input order.
 
 out_dir = Path(__file__).parent
-model_path = out_dir / "wine_pipeline.joblib"
-meta_path = out_dir / "wine_features.joblib"
+models_dir = out_dir / "models"
+models_dir.mkdir(parents=True, exist_ok=True)
+
+model_path = models_dir / "wine_pipeline.joblib"
+meta_path = models_dir / "wine_features.joblib"
 
 # Also save the full original feature list (all 11 features) so callers can
 # prompt for all inputs and let the pipeline's selector handle selecting the
 # subset at predict time.
-all_features_path = out_dir / "wine_all_features.joblib"
+all_features_path = models_dir / "wine_all_features.joblib"
 
 # Save the full pipeline (preprocessing, feature selector, and model)
 joblib.dump(pipe, model_path)

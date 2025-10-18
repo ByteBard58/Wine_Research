@@ -5,9 +5,10 @@ import numpy as np
 
 # Where the model artifacts are expected to live (same folder as this script)
 HERE = Path(__file__).parent
-MODEL_FILE = HERE / "wine_pipeline.joblib"
-FEATURES_FILE = HERE / "wine_features.joblib"
-ALL_FEATURES_FILE = HERE / "wine_all_features.joblib"
+MODELS_DIR = HERE / "models"
+MODEL_FILE = MODELS_DIR / "wine_pipeline.joblib"
+FEATURES_FILE = MODELS_DIR / "wine_features.joblib"
+ALL_FEATURES_FILE = MODELS_DIR / "wine_all_features.joblib"
 
 CLASS_MAP = {0: "Low quality (3-4)", 1: "Medium quality (5-6)", 2: "High quality (7-8)"}
 
