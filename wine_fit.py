@@ -5,8 +5,10 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.impute import SimpleImputer
 from sklearn.feature_selection import SequentialFeatureSelector
 from sklearn.pipeline import Pipeline
+from pathlib import Path
 import kagglehub
 import pandas as pd
+import joblib
 
 # Download the dataset
 path = kagglehub.dataset_download("yasserh/wine-quality-dataset")
@@ -78,3 +80,25 @@ print(names[mask])
 # Index(['volatile acidity', 'citric acid', 'free sulfur dioxide',
 #        'total sulfur dioxide', 'density', 'pH', 'sulphates'],
 #       dtype='object')
+
+# Persist the trained pipeline and the selected feature names so other tools (CLI, webapps)
+# can load the exact preprocessing + model and know the expected input order.
+
+out_dir = Path(__file__).parent
+model_path = out_dir / "wine_pipeline.joblib"
+meta_path = out_dir / "wine_features.joblib"
+
+# Also save the full original feature list (all 11 features) so callers can
+# prompt for all inputs and let the pipeline's selector handle selecting the
+# subset at predict time.
+all_features_path = out_dir / "wine_all_features.joblib"
+
+# Save the full pipeline (preprocessing, feature selector, and model)
+joblib.dump(pipe, model_path)
+# Save the selected feature names in order so callers can build input arrays correctly
+joblib.dump(names[mask].tolist(), meta_path)
+joblib.dump(names.tolist(), all_features_path)
+
+print(f"Saved trained pipeline to: {model_path}")
+print(f"Saved selected feature names to: {meta_path}")
+print(f"Saved full feature list to: {all_features_path}")
