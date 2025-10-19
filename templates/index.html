@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🍷 Wine Quality Classifier</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>🍷 Wine Quality Classifier</h1>
+    <p class="subtitle">Enter the wine's chemical properties to predict its quality class.</p>
+
+    <form id="predictForm">
+      {% for f in features %}
+      <div class="input-group">
+        <label for="{{ f }}">{{ f }}</label>
+        <input type="number" step="any" name="{{ f }}" id="{{ f }}" placeholder="Enter value">
+      </div>
+      {% endfor %}
+    </form>
+
+    <button id="predictBtn" type="button">🍇 Predict</button>
+
+    <div id="result" class="result"></div>
+
+    <div id="probabilities" class="probabilities"></div>
+  </div>
+
+  <script defer src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
