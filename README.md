@@ -26,15 +26,19 @@ The project follows a complete end-to-end machine learning pipeline:
 
    Random Forest achieved the best overall performance and was chosen as the final model.
 
-3. **Model Deployment (CLI Tool)**
+3. **Model Deployment (CLI Tool & Web App)**
    A simple command-line tool allows users to **input wine properties manually** and get a **predicted wine quality** instantly.  
    The tool loads the trained Random Forest model (saved via `joblib`) and performs preprocessing before prediction.
+
+   In newer commits, a fully functional **Web App** has been added, built with **Flask** and a **Vanilla frontend**.  
+   This web app offers a clean UI and robust functionality. Users can input data through the web form and receive predictions with smooth visuals.
 
 ---
 
 ### 🧠 Tech Stack
 - **Python 3.13.7**  
-- **Libraries:** `pandas`, `numpy`, `scikit-learn`, `joblib`, `kagglehub`  
+- **Libraries:** `pandas`, `numpy`, `scikit-learn`, `joblib`, `kagglehub`, `Flask`
+- **HTML, CSS and JavaScript** for Frontend
 
 ---
 
@@ -50,8 +54,11 @@ pip install -r requirements.txt
 # Run the notebook
 jupyter notebook research.ipynb
 
-# OR run the CLI predictor
+# Run the CLI predictor
 python wine_cli.py
+
+# Run the Web App
+python app.py
 ```
 
 ### 📊 Results Summary
@@ -72,31 +79,53 @@ Model performance was limited by class imbalance and overlapping feature distrib
 
 - Experiment with gradient boosting (XGBoost, LightGBM)
 
-- Build a lightweight Streamlit app version
-
 ### 📁 Project Structure
 The repository layout as it appears in this workspace:
-
 ```
 Wine_Research/
 │
 ├── Datasets/
-│ └── WineQT.csv # Original dataset
+│   └── WineQT.csv                 # Original dataset
 │
-├── models/                     # Serialized ML models
-│ ├── wine_all_features.joblib
-│ ├── wine_features.joblib
-│ └── wine_pipeline.joblib
+├── models/                        # Serialized ML models
+│   ├── wine_all_features.joblib
+│   ├── wine_features.joblib
+│   └── wine_pipeline.joblib
 │
-├── research.ipynb            # Main analysis & model comparison notebook
-├── wine_fit.py # Script for training & saving models
-├── wine_cli.py # CLI tool for user input predictions
+├── static/                        # Frontend static files
+│   ├── style.css
+│   └── script.js
 │
-├── requirements.txt          # Project dependencies
-├── README.md                 # Documentation
-├── LICENSE                   # License info
-└── .gitignore                # Ignored files/folders
+├── templates/                     # HTML templates for Flask
+│   └── index.html
+│
+├── research.ipynb                 # Main analysis & model comparison notebook
+├── wine_fit.py                    # Script for training & saving models
+├── wine_cli.py                    # CLI tool for user input predictions
+│
+├── app.py                         # Flask web app entry point
+│
+├── requirements.txt               # Project dependencies
+├── README.md                      # Documentation
+├── LICENSE                        # License info
+└── .gitignore                     # Ignored files/folders
 ```
+
+### 👨‍💻 About the Web App
+The web app is implemented in `app.py` and uses the `.joblib` files to access the ML pipeline. Flask serves as the backend framework, and the site runs on localhost:5000
+
+It offers a user-friendly UI and elegant visuals.
+
+Here are some things you should keep in mind:
+- In order to run the Flask app as expected, you need the `.joblib` files which contain the ML pipeline and the list of all features. I have included the files with the repository (in the models subdirectory). But if the files are somehow missing, you can easily get those by running the `wine_fit.py` file. To do that, open terminal and run:
+```bash
+cd Wine_Research
+python wine_fit.py
+```
+- After running app.py, open your browser and go to [localhost:5000](http://127.0.0.1:5000/)
+- Both the CLI tool and web app handle empty inputs gracefully. Empty fields are treated as NaN and imputed by the model’s preprocessor, but predictions may be less accurate — so it’s best to provide all inputs.
+- I am unable to code the frontend for the web app since I don't have any expertise with front end. I had to use AI tools (mostly LLMs like ChatGPT™ and Gemini™) in order to pull the front end. So, the files inside the `templates` and `static` subdirectory are completely AI generated (the code).
+
 
 ### 😃 Appreciation
 Thank you for giving my work a look. I hope you liked it. If you have any queries, I would love to here those. Check my [GitHub profile](https://github.com/ByteBard58/) for contact info.
