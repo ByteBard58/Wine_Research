@@ -2,6 +2,7 @@ import sys
 from pathlib import Path
 import joblib
 import numpy as np
+from wine_fit import dumping
 
 # Where the model artifacts are expected to live (same folder as this script)
 HERE = Path(__file__).parent
@@ -15,15 +16,22 @@ CLASS_MAP = {0: "Low quality (3-4)", 1: "Medium quality (5-6)", 2: "High quality
 def load_artifacts():
     """Load the saved pipeline and feature list. Exit with a helpful message if
     artifacts are missing."""
-    if not MODEL_FILE.exists():
+    if not MODEL_FILE.exists() or not ALL_FEATURES_FILE.exists():
         print("Could not find the required model artifacts.")
         print(f"Expected files:\n  {MODEL_FILE} \n {ALL_FEATURES_FILE}")
-        print("Run `wine_fit.py` to train and save the pipeline first.")
-        sys.exit(2)
+        print("Attempting to create them by running the training routine now.")
+        try:
+            dumping()
+        except Exception as exc:
+            print("Failed to create model artifacts.")
+            print(str(exc))
+            sys.exit(2)
+        if not MODEL_FILE.exists() or not ALL_FEATURES_FILE.exists():
+            print("Model artifacts are still missing after attempting to create them.")
+            sys.exit(2)
 
     pipeline = joblib.load(MODEL_FILE)
-    if ALL_FEATURES_FILE.exists():
-        features = joblib.load(ALL_FEATURES_FILE)
+    features = joblib.load(ALL_FEATURES_FILE)
     return pipeline, features
 
 
