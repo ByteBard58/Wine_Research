@@ -17,13 +17,13 @@
         <input type="number" step="any" name="{{ f }}" id="{{ f }}" placeholder="Enter value">
       </div>
       {% endfor %}
+      <button id="predictBtn" type="submit">🍇 Predict</button>
     </form>
 
-    <button id="predictBtn" type="button">🍇 Predict</button>
-
-    <div id="result" class="result"></div>
-
-    <div id="probabilities" class="probabilities"></div>
+    <div id="result" class="result">
+      <p id="pred-label"></p>
+      <div id="prob-bars" class="probabilities"></div>
+    </div>
   </div>
 
   <script defer src="{{ url_for('static', filename='script.js') }}"></script>

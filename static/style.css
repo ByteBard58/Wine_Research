@@ -41,9 +41,21 @@ p.subtitle {
 /* === Input Fields === */
 form {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
   margin-bottom: 30px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.input-group label {
+  margin-bottom: 6px;
+  color: #ff9999;
+  font-size: 0.95rem;
 }
 
 input[type="number"] {
@@ -81,6 +93,12 @@ button:hover {
   box-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
 }
 
+form button {
+  grid-column: 1 / -1;
+  justify-self: center;
+  margin-top: 10px;
+}
+
 /* === Prediction Result === */
 .result {
   margin-top: 28px;
@@ -99,31 +117,34 @@ button:hover {
   text-align: left;
 }
 
-.prob-label {
-  font-size: 1rem;
-  margin-bottom: 6px;
-}
-
-.progress-bar {
-  position: relative;
-  width: 100%;
-  height: 28px;
-  background-color: rgba(255, 255, 255, 0.12);
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 14px;
-}
-
-.progress-bar-inner {
-  height: 100%;
+.bar-container {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  color: #fff;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.bar-label {
+  flex: 1;
+  min-width: 110px;
+  color: #ff9999;
+  font-size: 0.95rem;
+}
+
+.bar {
+  flex: 4;
+  height: 22px;
+  background: linear-gradient(90deg, #ff4d4d, #990000);
   border-radius: 10px;
   transition: width 0.4s ease;
-  background: linear-gradient(90deg, #ff4d4d, #990000);
+  box-shadow: 0 0 6px rgba(255, 77, 77, 0.6);
+}
+
+.bar-value {
+  flex: 0.6;
+  text-align: right;
+  color: #fff;
+  font-size: 0.9rem;
 }
 
 /* === Responsive === */

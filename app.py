@@ -38,7 +38,7 @@ def predict():
 
     return jsonify({
         "predicted_class": int(pred),
-        "predicted_label": CLASS_MAP.get(int(pred), "Unknown"),
+        "predicted_label": CLASS_MAP[int(pred)],
         "probabilities": pred_proba
     })
 

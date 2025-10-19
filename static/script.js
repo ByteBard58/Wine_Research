@@ -1,17 +1,18 @@
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("predictForm");
-  const inputs = document.querySelectorAll("input[type='number']");
-  const predictBtn = document.getElementById("predictBtn");
+  const inputs = form.querySelectorAll("input");
   const resultDiv = document.getElementById("result");
-  const probsDiv = document.getElementById("probabilities");
+  const predLabel = document.getElementById("pred-label");
+  const probBars = document.getElementById("prob-bars");
+  const predictBtn = document.getElementById("predictBtn");
 
-  // === 1. Enter key navigation ===
-  inputs.forEach((input, idx) => {
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        if (idx < inputs.length - 1) {
-          inputs[idx + 1].focus();
+  // Handle Enter key navigation
+  inputs.forEach((input, index) => {
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        if (index < inputs.length - 1) {
+          inputs[index + 1].focus();
         } else {
           predictBtn.click();
         }
@@ -19,49 +20,63 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // === 2. Predict button click ===
-  predictBtn.addEventListener("click", async () => {
+  // Handle form submit
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
     const formData = new FormData(form);
     const values = {};
-    formData.forEach((v, k) => (values[k] = v));
+    formData.forEach((v, k) => (values[k] = parseFloat(v)));
 
-    resultDiv.innerHTML = "Predicting...";
-    probsDiv.innerHTML = "";
+    predLabel.textContent = "Predicting...";
+    probBars.innerHTML = "";
+    resultDiv.style.display = "block";
 
     try {
-      const res = await fetch("/predict", {
+      const response = await fetch("/predict", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
 
-      const data = await res.json();
+      if (!response.ok) throw new Error("Server error");
 
-      if (data.error) {
-        resultDiv.innerHTML = `<span style="color:#ff6666">${data.error}</span>`;
-        return;
-      }
+      const data = await response.json();
+      const { predicted_label, probabilities } = data;
 
-      resultDiv.innerHTML = `<strong>Prediction:</strong> <span>${data.prediction}</span>`;
+      predLabel.textContent = `Predicted Quality: ${predicted_label}`;
+      probBars.innerHTML = "";
 
-      // === 3. Show probabilities with animated bars ===
-      probsDiv.innerHTML = "<h3>Class Probabilities:</h3>";
+      const classMap = {
+        0: 'Low quality (3-4)',
+        1: 'Medium quality (5-6)',
+        2: 'High quality (7-8)'
+      };
 
-      for (const [cls, prob] of Object.entries(data.probabilities)) {
+      probabilities.forEach((prob, idx) => {
+        const barContainer = document.createElement("div");
+        barContainer.className = "bar-container";
+
+        const label = document.createElement("span");
+        label.textContent = classMap[idx] || `Class ${idx}`;
+        label.className = "bar-label";
+
         const bar = document.createElement("div");
-        bar.className = "progress-bar";
+        bar.className = "bar";
+        bar.style.width = `${prob * 100}%`;
 
-        const barInner = document.createElement("div");
-        barInner.className = "progress-bar-inner";
-        barInner.style.width = `${prob * 100}%`;
-        barInner.textContent = `${cls.toUpperCase()}: ${(prob * 100).toFixed(1)}%`;
+        const value = document.createElement("span");
+        value.textContent = `${(prob * 100).toFixed(1)}%`;
+        value.className = "bar-value";
 
-        bar.appendChild(barInner);
-        probsDiv.appendChild(bar);
-      }
+        barContainer.appendChild(label);
+        barContainer.appendChild(bar);
+        barContainer.appendChild(value);
+        probBars.appendChild(barContainer);
+      });
     } catch (err) {
       console.error(err);
-      resultDiv.innerHTML = `<span style="color:#ff6666">Server error. Check console.</span>`;
+      predLabel.textContent = "Error: Could not get prediction.";
     }
   });
 });
