@@ -6,13 +6,11 @@ from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from pathlib import Path
 from sklearn.decomposition import PCA
-import kagglehub
 import pandas as pd
 import joblib
 
 def download():
-  path = kagglehub.dataset_download("yasserh/wine-quality-dataset")
-  df = pd.read_csv(f"{path}/WineQT.csv") 
+  df = pd.read_csv("Datasets/WineQT.csv")
   return df
 
 def modifcation(x):
