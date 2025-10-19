@@ -111,7 +111,10 @@ form button {
   color: #ff6666;
 }
 
-/* === Probability Bars === */
+/* ------------------------------------- */
+/* === Probability Bars (FIXED) === */
+/* ------------------------------------- */
+
 .probabilities {
   margin-top: 25px;
   text-align: left;
@@ -125,23 +128,31 @@ form button {
 }
 
 .bar-label {
-  flex: 1;
-  min-width: 110px;
+  flex: 0 0 120px; /* Fixed width for label */
   color: #ff9999;
   font-size: 0.95rem;
 }
 
-.bar {
-  flex: 4;
+.bar-wrapper {
+  flex: 1; /* This wrapper takes up all the available remaining space */
   height: 22px;
+  background-color: rgba(255, 255, 255, 0.1); /* Background for the 'empty' part of the bar */
+  border-radius: 10px;
+  overflow: hidden; /* Ensures the inner bar doesn't extend past the wrapper */
+}
+
+.bar {
+  /* This inner bar is what gets its width dynamically set by JS */
+  height: 100%;
+  width: 0; /* Start at 0 width for the smooth transition animation */
   background: linear-gradient(90deg, #ff4d4d, #990000);
   border-radius: 10px;
-  transition: width 0.4s ease;
+  transition: width 0.6s ease-out; 
   box-shadow: 0 0 6px rgba(255, 77, 77, 0.6);
 }
 
 .bar-value {
-  flex: 0.6;
+  flex: 0 0 50px; /* Fixed width for percentage value */
   text-align: right;
   color: #fff;
   font-size: 0.9rem;
