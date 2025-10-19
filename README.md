@@ -12,17 +12,17 @@ The project follows a complete end-to-end machine learning pipeline:
 1. **Data Preprocessing**
    - Missing value imputation  
    - Feature scaling (StandardScaler)  
-   - Sequential Feature Selection (SFS)  
+   - Principle Component Analysis (PCA)
    - Pipelines for consistent preprocessing  
 
 2. **Model Training & Evaluation**
    Tested and compared multiple ML algorithms:
    | Model | Key Parameters | Cross-Validation Accuracy |
    |:------|:---------------|:--------------------------|
-   | **K-Nearest Neighbors** | Euclidean distance | **≈ 0.8451** |
-   | **Support Vector Classifier** | RBF kernel | **≈ 0.8223** |
-   | **Random Forest Classifier** | 1000 trees | **≈ 0.8696** |
-   | **Logistic Regression** | lbfgs solver, L2 penalty | **≈ 0.5625** |
+   | **K-Nearest Neighbors** | Euclidean distance | **≈ 0.8390** |
+   | **Support Vector Classifier** | RBF kernel | **≈ 0.8110** |
+   | **Random Forest Classifier** | 1000 trees | **≈ 0.8731** |
+   | **Logistic Regression** | lbfgs solver, L2 penalty | **≈ 0.5616** |
 
    Random Forest achieved the best overall performance and was chosen as the final model.
 
