@@ -7,7 +7,6 @@ import numpy as np
 HERE = Path(__file__).parent
 MODELS_DIR = HERE / "models"
 MODEL_FILE = MODELS_DIR / "wine_pipeline.joblib"
-FEATURES_FILE = MODELS_DIR / "wine_features.joblib"
 ALL_FEATURES_FILE = MODELS_DIR / "wine_all_features.joblib"
 
 CLASS_MAP = {0: "Low quality (3-4)", 1: "Medium quality (5-6)", 2: "High quality (7-8)"}
@@ -16,20 +15,15 @@ CLASS_MAP = {0: "Low quality (3-4)", 1: "Medium quality (5-6)", 2: "High quality
 def load_artifacts():
     """Load the saved pipeline and feature list. Exit with a helpful message if
     artifacts are missing."""
-    if not MODEL_FILE.exists() or not FEATURES_FILE.exists():
+    if not MODEL_FILE.exists():
         print("Could not find the required model artifacts.")
-        print(f"Expected files:\n  {MODEL_FILE}\n  {FEATURES_FILE}")
+        print(f"Expected files:\n  {MODEL_FILE} \n {ALL_FEATURES_FILE}")
         print("Run `wine_fit.py` to train and save the pipeline first.")
         sys.exit(2)
 
     pipeline = joblib.load(MODEL_FILE)
-    # Prefer the full 11-feature list if available so the CLI can ask for all
-    # original features. Fall back to the selected features file for
-    # backward-compatibility.
     if ALL_FEATURES_FILE.exists():
         features = joblib.load(ALL_FEATURES_FILE)
-    else:
-        features = joblib.load(FEATURES_FILE)
     return pipeline, features
 
 

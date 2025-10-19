@@ -3,9 +3,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 from sklearn.preprocessing import StandardScaler
 from sklearn.impute import SimpleImputer
-from sklearn.feature_selection import SequentialFeatureSelector
 from sklearn.pipeline import Pipeline
 from pathlib import Path
+from sklearn.decomposition import PCA
 import kagglehub
 import pandas as pd
 import joblib
@@ -36,8 +36,7 @@ x_train,x_test,y_train,y_test = train_test_split(
 
 model = RandomForestClassifier(
   n_estimators=1500,max_depth=None,random_state=391,class_weight="balanced")
-sfs = SequentialFeatureSelector(
-  estimator=model,n_features_to_select="auto",tol=1e-5,direction="backward",cv=3)
+pca = PCA(n_components=None)
 
 preprocessor = Pipeline([
   ("imputation",SimpleImputer(strategy="median")),
@@ -45,9 +44,10 @@ preprocessor = Pipeline([
 ])
 pipe = Pipeline([
   ("preprocessing",preprocessor),
-  ("sfs",sfs),
+  ("pca",pca),
   ("model",model)
 ])
+
 pipe.fit(x_train,y_train)
 
 y_true = y_test
@@ -55,33 +55,16 @@ y_pred = pipe.predict(x_test)
 print(classification_report(y_true=y_true,y_pred=y_pred))
 
 # Output:
-#               precision    recall  f1-score   support
-
 #            0       0.00      0.00      0.00        13
-#            1       0.89      0.98      0.93       315
-#            2       0.85      0.53      0.65        53
-# 
-#     accuracy                           0.88       381
-#    macro avg       0.58      0.50      0.53       381
-# weighted avg       0.85      0.88      0.86       381
+#            1       0.88      1.00      0.94       315
+#            2       0.96      0.47      0.63        53
+
+#     accuracy                           0.89       381
+#    macro avg       0.62      0.49      0.52       381
+# weighted avg       0.87      0.89      0.86       381
 
 
-
-# Fetching Feature Names
-sfs_ = pipe.named_steps["sfs"]
-scaler = pipe.named_steps["preprocessing"]
-
-mask = sfs_.get_support()
-
-
-print(names[mask])
-
-# Output:
-# Index(['volatile acidity', 'citric acid', 'free sulfur dioxide',
-#        'total sulfur dioxide', 'density', 'pH', 'sulphates'],
-#       dtype='object')
-
-# Persist the trained pipeline and the selected feature names so other tools (CLI, webapps)
+# Persist the trained pipeline and the selected feature names so other tools (CLI)
 # can load the exact preprocessing + model and know the expected input order.
 
 out_dir = Path(__file__).parent
@@ -89,19 +72,11 @@ models_dir = out_dir / "models"
 models_dir.mkdir(parents=True, exist_ok=True)
 
 model_path = models_dir / "wine_pipeline.joblib"
-meta_path = models_dir / "wine_features.joblib"
-
-# Also save the full original feature list (all 11 features) so callers can
-# prompt for all inputs and let the pipeline's selector handle selecting the
-# subset at predict time.
 all_features_path = models_dir / "wine_all_features.joblib"
 
 # Save the full pipeline (preprocessing, feature selector, and model)
 joblib.dump(pipe, model_path)
-# Save the selected feature names in order so callers can build input arrays correctly
-joblib.dump(names[mask].tolist(), meta_path)
 joblib.dump(names.tolist(), all_features_path)
 
 print(f"Saved trained pipeline to: {model_path}")
-print(f"Saved selected feature names to: {meta_path}")
 print(f"Saved full feature list to: {all_features_path}")
