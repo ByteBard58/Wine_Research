@@ -43,23 +43,33 @@ The project follows a complete end-to-end machine learning pipeline:
 ---
 
 ### 🚀 How to Run
+Clone the repo
 ```bash
-# Clone the repo
 git clone https://github.com/ByteBard58/Wine_Research
 cd Wine_Research
-
-# Install dependencies
+```
+Install dependencies
+```bash
 pip install -r requirements.txt
+```
+After that, you can do any of these 3 things:
 
-# Run the notebook
+Run the notebook
+```bash
 jupyter notebook research.ipynb
+```
 
-# Run the CLI predictor
+Run the CLI predictor
+```bash
 python wine_cli.py
+```
 
-# Run the Web App
+Run the Web App
+```bash
 python app.py
 ```
+
+---
 
 ### 📊 Results Summary
 
@@ -78,6 +88,8 @@ Model performance was limited by class imbalance and overlapping feature distrib
 - Tune hyperparameters using GridSearchCV
 
 - Experiment with gradient boosting (XGBoost, LightGBM)
+
+  ---
 
 ### 📁 Project Structure
 The repository layout as it appears in this workspace:
@@ -111,6 +123,8 @@ Wine_Research/
 └── .gitignore                     # Ignored files/folders
 ```
 
+---
+
 ### 👨‍💻 About the Web App
 The web app is implemented in `app.py` and uses the `.joblib` files to access the ML pipeline. Flask serves as the backend framework, and the site runs on localhost:5000
 
@@ -126,6 +140,7 @@ python wine_fit.py
 - Both the CLI tool and web app handle empty inputs gracefully. Empty fields are treated as NaN and imputed by the model’s preprocessor, but predictions may be less accurate — so it’s best to provide all inputs.
 - I am unable to code the frontend for the web app since I don't have any expertise with front end. I had to use AI tools (mostly LLMs like ChatGPT™ and Gemini™) in order to pull the front end. So, the files inside the `templates` and `static` subdirectory are completely AI generated (the code).
 
+---
 
 ### 😃 Appreciation
 Thank you for giving my work a look. I hope you liked it. If you have any queries, I would love to here those. Check my [GitHub profile](https://github.com/ByteBard58/) for contact info.
