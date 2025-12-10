@@ -1,31 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>🍷 Wine Quality Classifier</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wine Quality Classifier 🍷</title>
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-  <div class="container">
-    <h1>🍷 Wine Quality Classifier</h1>
-    <p class="subtitle">Enter the wine's chemical properties to predict its quality class.</p>
 
-    <form id="predictForm">
-      {% for f in features %}
-      <div class="input-group">
-        <label for="{{ f }}">{{ f }}</label>
-        <input type="number" step="any" name="{{ f }}" id="{{ f }}" placeholder="Enter value">
-      </div>
-      {% endfor %}
-      <button id="predictBtn" type="submit">🍇 Predict</button>
-    </form>
+    <div class="background-overlay"></div>
 
-    <div id="result" class="result">
-      <p id="pred-label"></p>
-      <div id="prob-bars" class="probabilities"></div>
-    </div>
-  </div>
+    <main class="app-container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <i class="fa-solid fa-wine-glass-empty"></i>
+                <span>Wine Quality Classifier</span>
+            </div>
+            <p class="tagline">Artificial Sommelier Intelligence</p>
+        </header>
 
-  <script defer src="{{ url_for('static', filename='script.js') }}"></script>
+        <div class="content-wrapper">
+            <!-- Left Panel: Input & Controls -->
+            <section class="panel input-panel">
+                <div class="panel-header">
+                    <h2>Chemical Profile</h2>
+                    <p>Enter the wine's physicochemical properties.</p>
+                </div>
+
+                <form id="predictForm">
+                    <div class="inputs-grid">
+                        {% for f in features %}
+                        <div class="input-group">
+                            <input type="number" step="any" name="{{ f }}" id="{{ f }}" placeholder=" " required>
+                            <label for="{{ f }}">{{ f }}</label>
+                            <div class="focus-line"></div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="action-area">
+                        <button type="submit" id="predictBtn">
+                            <span class="btn-text">Analyze Vintage</span>
+                            <span class="btn-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></span>
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Right Panel: Results & Visualization -->
+            <section class="panel result-panel" id="resultPanel">
+                <div class="empty-state" id="emptyState">
+                    <i class="fa-solid fa-flask"></i>
+                    <h3>Awaiting Analysis</h3>
+                    <p>Input data to reveal the quality assessment.</p>
+                </div>
+
+                <div class="prediction-content hidden" id="predictionContent">
+                    <div class="verdict-card">
+                        <span class="label">Predicted Quality</span>
+                        <h1 id="predictionResult">--</h1>
+                        <div class="badge" id="predictionBadge">Class ?</div>
+                    </div>
+
+                    <div class="confidence-section">
+                        <h3>Probability Distribution</h3>
+                        <div id="probBars"></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script defer src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

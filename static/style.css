@@ -1,174 +1,331 @@
-/* === Base Layout === */
+:root {
+    --bg-dark: #0f0505;
+    --bg-panel: rgba(20, 5, 5, 0.7);
+    --primary-gold: #d4af37;
+    --primary-gold-dim: #aa8c2c;
+    --text-white: #f5f5f5;
+    --text-muted: #a09090;
+    --accent-red: #722f37; /* Merlot */
+    --input-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(212, 175, 55, 0.15);
+    
+    --font-serif: 'Cinzel', serif;
+    --font-sans: 'Montserrat', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 body {
-  font-family: "Inter", "Segoe UI", sans-serif;
-  background: radial-gradient(circle at top left, #1a0000, #000);
-  color: #f5f5f5;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
-  margin: 0;
-  padding: 40px 10px;
+    font-family: var(--font-sans);
+    background-color: var(--bg-dark);
+    color: var(--text-white);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
 }
 
-/* === Main Container === */
-.container {
-  background: rgba(30, 0, 0, 0.85);
-  border: 1px solid rgba(255, 0, 0, 0.25);
-  box-shadow: 0 0 25px rgba(200, 0, 0, 0.4);
-  border-radius: 16px;
-  padding: 35px 40px;
-  width: 100%;
-  max-width: 800px;
-  text-align: center;
-  backdrop-filter: blur(6px);
+/* Cinematic Background */
+.background-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 10% 20%, rgba(114, 47, 55, 0.2), transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(212, 175, 55, 0.05), transparent 40%);
+    z-index: -1;
+    pointer-events: none;
 }
 
-/* === Header === */
-h1 {
-  font-size: 2rem;
-  margin-bottom: 8px;
-  color: #ff4d4d;
-  text-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+/* App Container */
+.app-container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 2rem;
+    animation: fadeIn 1s ease-out;
 }
 
-p.subtitle {
-  color: #d9d9d9;
-  font-size: 1.05rem;
-  margin-bottom: 28px;
+header {
+    text-align: center;
+    margin-bottom: 3rem;
 }
 
-/* === Input Fields === */
-form {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  margin-bottom: 30px;
+.logo {
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    color: var(--primary-gold);
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+    margin-bottom: 0.5rem;
 }
 
+.tagline {
+    font-family: var(--font-sans);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* Main Content Wrapper */
+.content-wrapper {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 2rem;
+}
+
+/* Panels */
+.panel {
+    background: var(--bg-panel);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    transition: transform 0.3s ease;
+}
+
+.panel-header {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--glass-border);
+    padding-bottom: 1rem;
+}
+
+.panel-header h2 {
+    font-family: var(--font-serif);
+    color: var(--text-white);
+    margin-bottom: 0.5rem;
+}
+
+.panel-header p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* Form Grid */
+.inputs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+/* Input Styles */
 .input-group {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+    position: relative;
+    padding-top: 10px;
+}
+
+.input-group input {
+    width: 100%;
+    background: var(--input-bg);
+    border: none;
+    border-bottom: 1px solid var(--text-muted);
+    color: var(--text-white);
+    padding: 10px 5px;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+    outline: none;
+    background: rgba(255,255,255,0.08);
 }
 
 .input-group label {
-  margin-bottom: 6px;
-  color: #ff9999;
-  font-size: 0.95rem;
+    position: absolute;
+    left: 5px;
+    top: 10px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    pointer-events: none;
+    transition: all 0.3s ease;
 }
 
-input[type="number"] {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 80, 80, 0.5);
-  background-color: rgba(255, 255, 255, 0.05);
-  color: #fff;
-  outline: none;
-  font-size: 1rem;
-  transition: all 0.2s ease-in-out;
+/* Floating Label Logic */
+.input-group input:focus ~ label,
+.input-group input:not(:placeholder-shown) ~ label {
+    top: -12px;
+    font-size: 0.75rem;
+    color: var(--primary-gold);
 }
 
-input[type="number"]:focus {
-  border-color: #ff4d4d;
-  box-shadow: 0 0 8px rgba(255, 0, 0, 0.6);
+.focus-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary-gold);
+    transition: width 0.3s ease;
 }
 
-/* === Predict Button === */
-button {
-  background-color: #ff4d4d;
-  color: #fff;
-  border: none;
-  padding: 12px 28px;
-  font-size: 1.05rem;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.25s ease;
+.input-group input:focus ~ .focus-line {
+    width: 100%;
 }
 
-button:hover {
-  background-color: #ff6666;
-  transform: scale(1.05);
-  box-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
+/* Button */
+#predictBtn {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(45deg, var(--primary-gold-dim), var(--primary-gold));
+    border: none;
+    border-radius: 8px;
+    color: #000;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
 }
 
-form button {
-  grid-column: 1 / -1;
-  justify-self: center;
-  margin-top: 10px;
+#predictBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
 }
 
-/* === Prediction Result === */
-.result {
-  margin-top: 28px;
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #ffb3b3;
+#predictBtn:active {
+    transform: scale(0.98);
 }
 
-.result span {
-  color: #ff6666;
+/* Right Panel (Results) */
+.result-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 400px;
+    position: relative;
+    overflow: hidden;
 }
 
-/* ------------------------------------- */
-/* === Probability Bars (FIXED) === */
-/* ------------------------------------- */
-
-.probabilities {
-  margin-top: 25px;
-  text-align: left;
+.empty-state {
+    text-align: center;
+    color: var(--text-muted);
+    opacity: 0.7;
+    transition: opacity 0.3s;
 }
 
-.bar-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 8px;
+.empty-state i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    color: var(--glass-border);
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Results Content */
+.prediction-content {
+    text-align: center;
+    animation: slideUp 0.5s ease-out;
+}
+
+.verdict-card {
+    border: 1px solid var(--primary-gold);
+    padding: 2rem;
+    border-radius: 12px;
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.1), transparent);
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.verdict-card .label {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.8rem;
+    color: var(--primary-gold);
+}
+
+.verdict-card h1 {
+    font-family: var(--font-serif);
+    font-size: 2.5rem;
+    margin: 1rem 0;
+    color: #fff;
+}
+
+.badge {
+    display: inline-block;
+    padding: 5px 15px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* Probs */
+.confidence-section h3 {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-muted);
+    text-align: left;
+}
+
+.bar-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    gap: 15px;
 }
 
 .bar-label {
-  flex: 0 0 120px; /* Fixed width for label */
-  color: #ff9999;
-  font-size: 0.95rem;
+    width: 60px;
+    text-align: right;
+    font-size: 0.85rem;
+    color: var(--text-muted);
 }
 
-.bar-wrapper {
-  flex: 1; /* This wrapper takes up all the available remaining space */
-  height: 22px;
-  background-color: rgba(255, 255, 255, 0.1); /* Background for the 'empty' part of the bar */
-  border-radius: 10px;
-  overflow: hidden; /* Ensures the inner bar doesn't extend past the wrapper */
+.bar-track {
+    flex-grow: 1;
+    height: 8px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    overflow: hidden;
 }
 
-.bar {
-  /* This inner bar is what gets its width dynamically set by JS */
-  height: 100%;
-  width: 0; /* Start at 0 width for the smooth transition animation */
-  background: linear-gradient(90deg, #ff4d4d, #990000);
-  border-radius: 10px;
-  transition: width 0.6s ease-out; 
-  box-shadow: 0 0 6px rgba(255, 77, 77, 0.6);
+.bar-fill {
+    height: 100%;
+    background: var(--primary-gold);
+    width: 0;
+    transition: width 1s cubic-bezier(0.65, 0, 0.35, 1);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
 }
 
-.bar-value {
-  flex: 0 0 50px; /* Fixed width for percentage value */
-  text-align: right;
-  color: #fff;
-  font-size: 0.9rem;
+.bar-percent {
+    width: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-white);
 }
 
-/* === Responsive === */
-@media (max-width: 600px) {
-  .container {
-    padding: 25px 20px;
-  }
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
 
-  h1 {
-    font-size: 1.6rem;
-  }
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
-  button {
-    width: 100%;
-  }
+/* Responsive */
+@media (max-width: 900px) {
+    .content-wrapper {
+        grid-template-columns: 1fr;
+    }
 }
