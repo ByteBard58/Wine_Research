@@ -1,5 +1,6 @@
 __pycache__/
 *.py[cod]
+*__marimo__
 *$py.class
 venv/
 env/
