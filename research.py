@@ -16,7 +16,7 @@ def _(mo):
     # Wine Research
     In this practice project, I have done some work on the famous wine dataset from Kaggle. I have used this notebook primarily as a testing playground. You can check the different scores I received while testing with various different models at the bottom of this notebook.
 
-    In December 2025, I added new updates. It includes a totally new dataset, newer and more robust classifiers and techniques. In this notebook, you can see exactly how I have crafted the model to perform its best!
+    In December 2025, I added new updates. It includes, newer and more robust classifiers and techniques. In this notebook, you can see exactly how I have crafted the model to perform its best! I also wanted to test on a totally new dataset. But, I couldn't find a reasonable one. So the previous dataset is still used in the newer version.
     """)
     return
 
@@ -59,10 +59,45 @@ def _(mo):
     return
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Importing dataset
+    """)
+    return
+
+
 @app.cell
 def _(pd):
-    df_raw = pd.read_csv("Datasets/Wine dataset.csv")
-    df_raw
+    df_raw = pd.read_csv("Datasets/WineQT.csv")
+    return (df_raw,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Removing identifier column
+    """)
+    return
+
+
+@app.cell
+def _(df_raw):
+    df_1 = df_raw.drop(columns=["Id"],axis=0)
+    return (df_1,)
+
+
+@app.cell
+def _(df_1):
+    df_1
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    *In progress.......*
+    """)
     return
 
 
