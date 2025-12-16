@@ -37,10 +37,10 @@ def _():
 
     from sklearn.linear_model import LogisticRegression
     from sklearn.svm import SVC
-    # from sklearn.neighbors import KNeighborsClassifier as knn
+    from sklearn.neighbors import KNeighborsClassifier as KNN
     from sklearn.ensemble import RandomForestClassifier,StackingClassifier
 
-    from sklearn.model_selection import train_test_split, RandomizedSearchCV, learning_curve
+    from sklearn.model_selection import train_test_split, RandomizedSearchCV, learning_curve, GridSearchCV
     from sklearn.preprocessing import StandardScaler
     from sklearn.impute import SimpleImputer
 
@@ -52,12 +52,13 @@ def _():
 
     from xgboost import XGBClassifier
     return (
+        GridSearchCV,
+        KNN,
         LDA,
         LogisticRegression,
         PCA,
         Pipeline,
         RandomForestClassifier,
-        RandomizedSearchCV,
         SMOTE,
         SVC,
         SimpleImputer,
@@ -107,6 +108,12 @@ def _(df_raw):
 
 
 @app.cell
+def _(df):
+    df.iloc[:,-1].value_counts()
+    return
+
+
+@app.cell
 def _(df_1):
     df_1
     return
@@ -131,6 +138,35 @@ def _(mo):
     mo.md(r"""
     No need to worry about null, because there are no null values
     """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    Encoding class labels to 0,1,2 (low, medium and high quality)
+    """)
+    return
+
+
+@app.cell
+def _(df_1):
+    def mapper(x):
+        if x in [3,4]:
+            return 0
+        elif x in [5,6]:
+            return 1
+        elif x in [7,8]:
+            return 2
+
+    df_1["label_quality"] = df_1["quality"].apply(mapper)
+    df_1.drop(["quality"],axis=1,inplace=True)
+    return
+
+
+@app.cell
+def _(df_1):
+    df_1
     return
 
 
@@ -163,12 +199,6 @@ def _(df):
     return x, y
 
 
-@app.cell
-def _(df):
-    df.iloc[:,-1].value_counts()
-    return
-
-
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
@@ -194,13 +224,14 @@ def _(train_test_split, x, y):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## Defining Pipeline
+    ### Defining Pipeline
     """)
     return
 
 
 @app.cell
 def _(
+    KNN,
     LogisticRegression,
     PCA,
     Pipeline,
@@ -223,7 +254,8 @@ def _(
     lr = LogisticRegression(class_weight="balanced",random_state=43)
     svc = SVC(class_weight="balanced",random_state=78)
     xgb = XGBClassifier(random_state=902)
-    return lr, pipe, rf, svc, xgb
+    knn = KNN()
+    return knn, lr, pipe, rf, svc, xgb
 
 
 @app.cell(hide_code=True)
@@ -243,41 +275,90 @@ def _(mo):
 
 
 @app.cell
-def _(LDA, PCA, lr, np, rf, svc, xgb):
+def _(LDA, PCA, knn, lr, rf, svc, xgb):
     param_grid = [
+
+        # =========================
+        # RANDOM FOREST
+        # =========================
         {
-            "model": [rf], "model__n_estimators":np.arange(700,1100,100),"model__max_depth":[5,7,10,12], 
-            "dimen": [LDA()]
-        },
-        {
-            "model": [rf], "model__n_estimators":np.arange(700,1100,100),"model__max_depth":[5,7,10,12], 
-            "dimen": [PCA(random_state=9011)], "dimen__n_components":[3,6,9]
-        },
-        {
-            "model": [rf], "model__n_estimators":np.arange(700,1100,100),"model__max_depth":[5,7,10,12], 
+            "model": [rf],
+            "model__n_estimators": [1100,1300,1500],
+            "model__max_depth": [7,10],
             "dimen": ["passthrough"]
         },
         {
-            "model": [xgb],"model__n_estimators": np.arange(700, 1100, 4).tolist(),"model__learning_rate":[0.01,0.1],
-            "model__max_depth":[5,7,10,12], "dimen": [LDA()]
+            "model": [rf],
+            "model__n_estimators": [1100, 1300, 1500],
+            "model__max_depth": [7,10],
+            "dimen": [LDA()]
         },
         {
-            "model": [xgb],"model__n_estimators": np.arange(700, 1100, 4).tolist(),"model__learning_rate":[0.01,0.1],
-            "model__max_depth":[5,7,10,12], "dimen": [PCA(random_state=401)], "dimen__n_components": [3,6,9]
+            "model": [rf],
+            "model__n_estimators":[1100,1300,1500],
+            "model__max_depth": [7,10],
+            "dimen": [PCA(random_state=9011)],
+            "dimen__n_components": [3, 6, 9]
+        },
+
+        # =========================
+        # XGBOOST
+        # =========================
+        {
+            "model": [xgb],
+            "model__n_estimators": [500, 700, 1000],
+            "model__learning_rate": [0.01, 0.1],
+            "model__max_depth": [7,10],
+            "dimen": ["passthrough"]
         },
         {
-            "model": [xgb],"model__n_estimators": np.arange(700, 1100, 4).tolist(),"model__learning_rate":[0.01,0.1],
-            "model__max_depth":[5,7,10,12], "dimen": ["passthrough"]
+            "model": [xgb],
+            "model__n_estimators": [500, 700, 1000],
+            "model__learning_rate": [0.01, 0.1],
+            "model__max_depth": [7,10],
+            "dimen": [LDA()]
         },
         {
-            "model": [lr], "model__C": [0.01,0.1,1,10,100], "model__solver":["lbfgs","newton-cg"],
-            "model__penalty": ["l2"],"model__max_iter":[5000], "dimen":["passthrough"]
+            "model": [xgb],
+            "model__n_estimators": [500, 700, 1000],
+            "model__learning_rate": [0.01, 0.1],
+            "model__max_depth": [7,10],
+            "dimen": [PCA(random_state=401)],
+            "dimen__n_components": [6, 9]
         },
+
+        # =========================
+        # LOGISTIC REGRESSION
+        # =========================
         {
-            "model": [svc],"model__C":[0.01,0.1,1,10,100], "model__kernel":["rbf"],"model__max_iter":[5000],
-            "dimen":["passthrough"]
+            "model": [lr],
+            "model__C": [0.01, 0.1, 10],
+            "model__solver": ["lbfgs"],
+            "model__penalty": ["l2"],
+            "model__max_iter": [5000],
+            "dimen": ["passthrough"]
+        },
+
+        # =========================
+        # SVC
+        # =========================
+        {
+            "model": [svc],
+            "model__C": [0.1, 0.01, 10],
+            "model__kernel": ["rbf"],
+            "model__max_iter": [5000],
+            "dimen": ["passthrough"]
+        },
+
+        # =========================
+        # KNN
+        # =========================
+        {
+            "model": [knn],
+            "dimen": ["passthrough"]
         }
     ]
+
     return (param_grid,)
 
 
@@ -290,13 +371,13 @@ def _(mo):
 
 
 @app.cell
-def _(RandomizedSearchCV, np, param_grid, pipe, time, x_train, y_train):
-    rscv = RandomizedSearchCV(pipe,param_distributions=param_grid,n_iter=10,cv=5,n_jobs=-1,verbose=1,refit=True)
+def _(GridSearchCV, np, param_grid, pipe, time, x_train, y_train):
+    rscv = GridSearchCV(pipe,param_grid=param_grid,n_jobs=-1,refit=True,cv=3,verbose=1)
     t1 = time.time()
     rscv.fit(x_train,y_train)
     t2 = time.time()
-    hour,min = np.divmod((t2-t1),60)
-    print(f"Time Elapsed: {hour} Hour {min} Minutes")
+    min,sec = np.divmod((t2-t1),60)
+    print(f"Time Elapsed: {min} Minute {sec:.2f} Seconds")
 
     est = rscv.best_estimator_
     scr = rscv.best_score_
