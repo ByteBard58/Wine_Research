@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wine Quality Classifier</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="background-overlay"></div>
+
+    <main class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fa-solid fa-wine-glass-empty"></i>
+                <h1>Wine Quality Classifier</h1>
+            </div>
+            <p class="subtitle">Exquisite Wine Quality Assessment</p>
+        </header>
+
+        <section class="classifier-section">
+            <form id="prediction-form" class="glass-panel">
+                <h2 class="form-title">Enter Wine Parameters</h2>
+                
+                <div class="input-grid">
+                    {% for feature in features %}
+                    <div class="input-group">
+                        <label for="{{ feature }}">{{ feature|replace('_', ' ')|title }}</label>
+                        <input type="number" step="any" id="{{ feature }}" name="{{ feature }}" placeholder="0.00" required>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="cta-button">
+                        <span class="btn-text">Analyze Quality</span>
+                        <span class="btn-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+                    </button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <!-- Result Modal -->
+    <div id="result-modal" class="modal hidden">
+        <div class="modal-content glass-panel">
+            <span class="close-modal">&times;</span>
+            <div class="result-body">
+                <div class="icon-wrapper" id="result-icon">
+                    <!-- Icon injected by JS -->
+                </div>
+                <h3>Quality Assessment</h3>
+                <h2 id="prediction-text" class="prediction-grade">--</h2>
+                <p id="prediction-desc" class="prediction-desc">Analysis complete.</p>
+                <button class="cta-button small" id="close-btn">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Loader -->
+     <div id="loader" class="loader-overlay hidden">
+        <div class="spinner"></div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
