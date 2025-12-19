@@ -103,6 +103,28 @@ The app will start at `http://127.0.0.1:5000`.
 
 ---
 
+## 🐳 Run the app directly via Dockerhub Image
+A [**Dockerhub repository**](https://hub.docker.com/r/bytebard101/wine_research) is created where I have pushed the docker image which contains the entire **Wine_Research** app. 
+
+The image is built on both ARM64 and AMD64 architectures, so that it can run on almost all major computers. You can run the app easily by using the Dockerhub Image. Here's how you can do it:
+1. Install [**Docker Desktop**](https://www.docker.com/products/docker-desktop/) and sign-in. Make sure the app is functioning properly.
+  
+2. Open Terminal and run:
+```bash
+docker pull bytebard101/wine_research:latest
+docker run --rm -p 5000:5000 bytebard101/wine_research:latest
+```
+3. If your machine faces a port conflict, you will need to assign another port. Try to run this:
+```bash
+docker run --rm -p 5001:5000 bytebard101/wine_research:latest
+```
+> If you followed Step 2 and the command ran successfully, then **DO NOT** follow this step.
+4. The app will be live at localhost:5000. Open your browser and navigate to [http://127.0.0.1:5000](http://127.0.0.1:5000/) (or [http://127.0.0.1:5001](http://127.0.0.1:5000/) if you followed Step 3).
+
+Check [Docker Documentation](https://docs.docker.com/) to learn more about Docker and it's commands.
+
+---
+
 ## 🍷 Web Interface
 
 Users can input **physicochemical parameters** such as:
