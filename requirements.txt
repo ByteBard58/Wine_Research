@@ -2,6 +2,10 @@ numpy
 pandas
 scikit-learn
 joblib
-kagglehub
-notebook
 flask
+gunicorn
+xgboost
+imbalanced-learn
+marimo
+matplotlib
+seaborn
