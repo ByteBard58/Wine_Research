@@ -1,0 +1,29 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Mac
+.DS_Store
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Development / Research files
+# We exclude these to keep the production image lean
+research.py
+__marimo__/
+reports/
+jupyter_notebook_config.py
+Dockerfile
+.dockerignore
